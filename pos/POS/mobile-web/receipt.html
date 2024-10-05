@@ -1,0 +1,279 @@
+<html>
+
+<head>
+    <title>POS - Cashier</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        .left-side-menu {
+            background-color: #332422;
+        }
+
+        .dashboard-header,
+        .receipt-container {
+            background-color: #5DADE2;
+        }
+
+        #img-latest-scanned {
+            width: 70px;
+            height: 70px;
+        }
+
+        .checkout-btn,
+        .checkout-btn:hover {
+            background-color: #5DADE2;
+        }
+
+        .print-btn,
+        .print-btn:hover {
+            background-color: #5D5D5D;
+        }
+
+        @media print {
+            .print-font {
+                font-size: 12px !important;
+                display: block !important;
+                color: #000000 !important;
+            }
+
+            .no-padding {
+                padding: 0 !important;
+            }
+
+            .no-print,
+            .no-print * {
+                display: none !important;
+            }
+
+            .print-container {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid p-0" style="height: 100%;">
+        <div class="row g-0 text-center" style="height: inherit;">
+            <div class="col-sm-12 receipt-container">
+                <div class="dashboard-header">
+                    <div class="h3 pt-3 fw-normal text-white print-font">Aldrinos</div>
+                </div>
+                <div class="dashboard-header">
+                    <div class="fw-normal text-white print-font">
+                        168 Mall Manila
+                    </div>
+                </div>
+                <div class="dashboard-header">
+                    <div class="fw-normal text-white print-font">
+                        TIN: 123-123-123
+                    </div>
+                </div>
+                <div class="w-50 mx-auto p-4 bg-white print-container no-padding">
+                    <div class="fs-6">
+                        <span class="print-font">
+                            Transaction #:
+                            <br>
+                            <span id="transaction-no"></span>
+                        </span>
+                        <br>
+                        <span class="print-font">
+                            Date time:
+                            <br>
+                            <span id="transaction-datetime"></span>
+                        </span>
+                    </div>
+                    <div>
+                        <table class="table w-100 mt-4" id="table-cart">
+                            <thead>
+                                <tr>
+                                    <td class="print-font" scope="col" style="padding: 0;">Items</td>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-cart"></tbody>
+                        </table>
+                    </div>
+                    <div class="fs-6" style="text-align: left;">
+                        <span class="print-font">Subtotal: &#8369; <span id="transaction-subtotal"></span></span>
+                        <br>
+                        <span class="print-font">VAT Sales: &#8369; <span id="vat-sales"></span></span>
+                        <br>
+                        <span class="print-font">VAT AMT (12%): &#8369; <span id="vat-amount"></span></span>
+                        <br>
+                        <span class="print-font">Amount Paid: &#8369; <span id="transaction-amount-paid"></span></span>
+                        <br>
+                        <span class="print-font">Change: &#8369; <span id="transaction-change"></span></span>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button class="px-4 btn btn-lg text-white rounded-pill checkout-btn mt-4 no-print"
+                                id="home-btn">
+                                Home
+                            </button>
+                            <button class="px-4 btn btn-lg text-white rounded-pill print-btn mt-4 no-print"
+                                id="print-btn">
+                                Print
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.slim.min.js"
+        integrity="sha256-ZwqZIVdD3iXNyGHbSYdsmWP//UBokj2FHAxKuSBKDSo=" crossorigin="anonymous"></script>
+    <script src="js/items.js"></script>
+    <script src="js/history.js"></script>
+    <script>
+        $(document).ready(() => {
+            var ua = navigator.userAgent.toLowerCase();
+            var isAndroid = ua.indexOf("android") > -1; //&& ua.indexOf("mobile");
+
+            var cart = [];
+            var transactionNo = null;
+            var currentDate = null;
+            var subtotal = 0;
+            var amountPaid = 0;
+            var change = 0;
+
+            const localStorageCart = JSON.parse(localStorage.getItem("cart"));
+            const localStoragetransactionNo = localStorage.getItem("transaction_no");
+            const localStorageChange = localStorage.getItem("change");
+            const localStorageAmount_paid = localStorage.getItem("amount_paid");
+            const localStorageDatetime = localStorage.getItem("datetime");
+            const localStorageSubtotal = localStorage.getItem("subtotal");
+
+            if (localStorageCart) {
+                cart = localStorageCart;
+            }
+            if (localStoragetransactionNo) {
+                transactionNo = localStoragetransactionNo;
+            }
+            if (localStorageChange) {
+                change = localStorageChange;
+            }
+            if (localStorageAmount_paid) {
+                amountPaid = localStorageAmount_paid;
+            }
+            if (localStorageDatetime) {
+                currentDate = localStorageDatetime;
+            }
+            if (localStorageSubtotal) {
+                subtotal = localStorageSubtotal;
+            }
+
+            const localStoragetransactions = JSON.parse(localStorage.getItem("transactions"));
+            if (localStoragetransactions != null && localStoragetransactions.length > 0) {
+                let transactions = localStoragetransactions;
+                const isTransactionExist = transactions.find((transaction) => transaction.transaction_no == transactionNo);
+                if (!isTransactionExist) {
+                    transactions.push({
+                        transaction_no: transactionNo,
+                        current_date: currentDate,
+                        subtotal: subtotal,
+                        amount_paid: amountPaid,
+                        change: change,
+                        cart: cart
+                    });
+                    localStorage.setItem("transactions", JSON.stringify(transactions));
+                }
+            } else {
+                localStorage.setItem("transactions", JSON.stringify([
+                    {
+                        transaction_no: transactionNo,
+                        current_date: currentDate,
+                        subtotal: subtotal,
+                        amount_paid: amountPaid,
+                        change: change,
+                        cart: cart
+                    }
+                ]));
+            }
+
+            function loadCart() {
+                $("#table-cart > #tbody-cart").html("");
+                var ctr = 1;
+                cart.map(cart_item => {
+                    $("#table-cart > #tbody-cart").append(`
+                        <tr>
+                            <td class="print-font" style="padding: 0;">
+                                <span>${cart_item.name} - ${cart_item.qty} pc(s)</span>
+                                <br>
+                                <span>${cart_item.code}</span>
+                                <br>
+                                &#8369; ${(cart_item.total).toFixed(2)}
+                            </td>
+                        </tr>
+                    `);
+                    $('.input-item-qty').keyup(() => {
+                        console.log($(this).attr('barcode'));
+                    })
+                    $('.delete-item').click(() => {
+                        console.log($(this).attr('barcode'));
+                    })
+                    ctr++;
+                });
+            }
+            function displayTransactionNo() {
+                $("#transaction-no").html(transactionNo)
+            }
+            function displayTransactionDatetime() {
+                $("#transaction-datetime").html(currentDate)
+            }
+            function displaySubtotal() {
+                $("#transaction-subtotal").html(subtotal);
+
+                let vatSales = subtotal - (subtotal * .12);
+                let vatAmount = subtotal - vatSales;
+
+                $("#vat-sales").html((vatSales).toFixed(2));
+                $("#vat-amount").html((vatAmount).toFixed(2));
+            }
+            function displayAmountPaid() {
+                $("#transaction-amount-paid").html(amountPaid);
+            }
+            function displayChange() {
+                $("#transaction-change").html(change);
+            }
+            displayTransactionNo();
+            displayTransactionDatetime();
+            displaySubtotal();
+            displayAmountPaid();
+            displayChange();
+            loadCart();
+            $("#print-btn").click((e) => {
+                e.preventDefault();
+                if (isAndroid) {
+                    // https://developers.google.com/cloud-print/docs/gadget
+                    var gadget = new cloudprint.Gadget();
+                    gadget.setPrintDocument("url", $('title').html(), window.location.href, "utf-8");
+                    gadget.openPrintDialog();
+                } else {
+                    window.print();
+                }
+                return false;
+            });
+            $("#home-btn").click(() => {
+                localStorage.removeItem("datetime", null);
+                localStorage.removeItem("subtotal", null);
+                localStorage.removeItem("amount_paid", null);
+                localStorage.removeItem("change", null);
+                localStorage.removeItem("cart", null);
+                localStorage.removeItem("transaction_no", null);
+                window.location.replace("dashboard.html");
+            });
+        });
+    </script>
+</body>
+
+</html>

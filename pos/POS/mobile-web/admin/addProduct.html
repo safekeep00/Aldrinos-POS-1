@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Aldrinos POS">
+    <meta name="author" content="Aldrinos POS">
+
+    <title>POS - Admin</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="template/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="template/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this page -->
+    <link href="template/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+    <style>
+        .bg-gradient-primary {
+            background-color: #5DADE2;
+            background-image: linear-gradient(180deg, #5DADE2 10%, #332422 100%);
+            background-size: cover;
+        }
+        .product-field {
+            vertical-align: middle !important;
+        }
+    </style>
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.html">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <!-- <i class="fas fa-laugh-wink"></i> -->
+                </div>
+                <div class="sidebar-brand-text mx-3">Aldrinos</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <a class="nav-link" href="dashboard.html">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Nav Item - Inventory -->
+            <li class="nav-item active">
+                <a class="nav-link" href="inventory.html">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Inventory</span></a>
+            </li>
+
+            <!-- Nav Item - Sales -->
+            <li class="nav-item">
+                <a class="nav-link" href="transactions.html">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>Transactions</span></a>
+            </li>
+
+            <!-- Nav Item - Analytics Reports -->
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Analytics Reports</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
+                                <img class="img-profile rounded-circle" src="template/img/undraw_profile.svg">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Add Product</h1>
+                    </div>
+
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                <a href="inventory.html">
+                                    <button class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back</button>
+                                </a>
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="addItem.php" enctype="multipart/form-data">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Field</th>
+                                            <th>Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="product-field">Barcode</td>
+                                            <td>
+                                                <input class="form-control" type="text" name="barcode" id="product-barcode" required>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="product-field">Name</td>
+                                            <td>
+                                                <input class="form-control" type="text" name="name" id="product-name" required>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="product-field">Category</td>
+                                            <td>
+                                                <select class="form-control" type="text" name="category" id="product-category" required>
+                                                    <option value="Canned Goods">Canned Goods</option>
+                                                    <option value="Fruits">Fruits</option>
+                                                    <option value="Vegetables">Vegetables</option>
+                                                    <option value="Dairy">Dairy</option>
+                                                    <option value="Meat">Meat</option>
+                                                    <option value="Fish & Seafood">Fish & Seafood</option>
+                                                    <option value="Deli">Deli</option>
+                                                    <option value="Condiments & Spices">Condiments & Spices</option>
+                                                    <option value="Snacks">Snacks</option>
+                                                    <option value="Bread & Bakery">Bread & Bakery</option>
+                                                    <option value="Beverages">Beverages</option>
+                                                    <option value="Pasta, Rice & Cereal">Pasta, Rice & Cereal</option>
+                                                    <option value="Baking">Baking</option>
+                                                    <option value="Frozen Foods">Frozen Foods</option>
+                                                    <option value="Personal Care">Personal Care</option>
+                                                    <option value="Health Care">Health Care</option>
+                                                    <option value="Household & Cleaning Supplies">Household & Cleaning Supplies</option>
+                                                    <option value="Baby Items">Baby Items</option>
+                                                    <option value="Pet Care">Pet Care</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="product-field">Code</td>
+                                            <td>
+                                                <input class="form-control" type="text" name="code" id="product-code" required>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="product-field">Price</td>
+                                            <td>
+                                                <input class="form-control" type="number" name="price" id="product-price" step=".01" required>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="product-field">Quantity</td>
+                                            <td>
+                                                <input class="form-control" type="number" name="qty" id="product-qty" required>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="product-field">Quantity Unit</td>
+                                            <td>
+                                                <select class="form-control" type="text" name="qty_unit" id="product-qty_unit" required>
+                                                    <option value="piece">Piece</option>
+                                                    <option value="Box">Box</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="product-field">Stock Threshold</td>
+                                            <td>
+                                                <input class="form-control" type="number" name="qty_stock_threshold" id="product-qty_stock_threshold" required>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="product-field">Image</td>
+                                            <td>
+                                                <img id="product-image" src="#" style="width: 200px; height: auto; display: block;">
+                                                <input type="file" id="product-image-upload" name="image" style="margin-top: 20px;">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="d-flex justify-content-end">
+                                    <input class="btn btn-success" type="submit" name="submit" value="Save">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Aldrinos 2024</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="index.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="template/vendor/jquery/jquery.min.js"></script>
+    <script src="template/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="template/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="template/js/sb-admin-2.min.js"></script>
+
+    <script src="../js/history.js"></script>
+
+    <script>
+        $(document).ready(() => {
+            $('#product-image-upload').change(function() {
+                var input = this;
+                var url = $(this).val();
+                var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+                if (input.files && input.files[0] && (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg")) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                       $('#product-image').attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
