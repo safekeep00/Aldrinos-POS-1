@@ -1,0 +1,300 @@
+<html>
+
+<head>
+    <title>POS - Cashier</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        .left-side-menu {
+            background-color: #332422;
+        }
+
+        .dashboard-header {
+            background-color: #5DADE2;
+        }
+
+        #img-latest-scanned {
+            width: 70px;
+            height: 70px;
+        }
+
+        .checkout-btn,
+        .checkout-btn:hover {
+            background-color: #5DADE2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid p-0" style="height: 100%;">
+        <div class="row g-0 text-center" style="height: inherit;">
+            <div class="col-sm-12">
+                <div class="dashboard-header">
+                    <div class="text-white" style="position: absolute; padding: 14px;" id="back">
+                        <span class="h3">&lt;</span>
+                        <span>Back</span>
+                    </div>
+                    <h1 class="h3 pt-3 pb-3 fw-normal text-white">Aldrinos</h1>
+                </div>
+                <div class="w-100 p-4">
+                    <div class="fs-6" style="text-align: left;">
+                        Transaction no: <span id="transaction-no"></span>
+                        <br>
+                        Date time: <span id="transaction-datetime"></span>
+                    </div>
+                    <div>
+                        <table class="table w-100 mt-4" id="table-cart">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col" style="width: 70px;">Img</th>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Qty</th>
+                                    <th scope="col" style="text-align: right;">Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-cart"></tbody>
+                        </table>
+                    </div>
+                    <div class="fs-6" style="text-align: right;">
+                        <span class="fw-bold">Subtotal: <span id="transaction-subtotal"></span></span>
+                        <br>
+                        <span class="fw-bold print-font">VAT AMT (12%): &#8369; <span id="vat-amount"></span></span>
+                        <br>
+                        Amount Paid: &#8369;
+                        <input type="number" id="transaction-amount-paid" />
+                        <br>
+                        Change: &#8369; <span id="transaction-change"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button class="px-4 btn btn-lg text-white rounded-pill checkout-btn mt-4"
+                                id="finish-transaction-btn" disabled data-bs-toggle="modal"
+                                data-bs-target="#confirmModal">
+                                Finish transaction
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="confirmModalLabel">Confirmation</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to finish this transaction?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" id="btn-confirm">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.slim.min.js"
+        integrity="sha256-ZwqZIVdD3iXNyGHbSYdsmWP//UBokj2FHAxKuSBKDSo=" crossorigin="anonymous"></script>
+    <script src="js/items.js"></script>
+    <script src="js/history.js"></script>
+    <script>
+        $(document).ready(() => {
+            var transactionNo = null;
+            var currentDate = null;
+            var subtotal = 0;
+            var amountPaid = 0;
+            var change = 0;
+            const localStorageCart = JSON.parse(localStorage.getItem("cart"));
+            const localStoragetransactionNo = localStorage.getItem("transaction_no");
+            if (localStorageCart) {
+                cart = localStorageCart;
+            }
+            if (localStoragetransactionNo) {
+                transactionNo = localStoragetransactionNo;
+            }
+            function loadCart() {
+                $("#table-cart > #tbody-cart").html("");
+                var ctr = 1;
+
+
+                console.log(cart);
+
+                cart.map(cart_item => {
+                    $("#table-cart > #tbody-cart").append(`
+                        <tr>
+                            <td>
+                                ${ctr}
+                            </td>
+                            <td>
+                                <img src="images/${cart_item.image}" id="img-latest-scanned" />
+                            </td>
+                            <td>
+                                <span class="fw-bold">${cart_item.name}</span>
+                                <br>
+                                <span>${cart_item.code}</span>
+                            </td>
+                            <td>
+                                <span 
+                                    class="text-danger fw-bold p-2 delete-item" 
+                                    barcode="${cart_item.barcode}"
+                                >
+                                    X
+                                </span>
+                                <input 
+                                    class="input-item-qty" 
+                                    type="number" 
+                                    min="0" 
+                                    max="999"
+                                    maxlength="3" 
+                                    value="${cart_item.qty}" 
+                                    barcode="${cart_item.barcode}"
+                                    id="input-${cart_item.barcode}"
+                                />
+                            </td>
+                            <td style="text-align: right;">
+                                &#8369; ${(cart_item.total).toFixed(2)}
+                            </td>
+                        </tr>
+                    `);
+                    $('.input-item-qty').change(function() {
+                        const selected_barcode = $(this).attr('barcode');
+                        const new_qty = $(this).val();
+                        
+                        cart.map(cart_item => {
+                            if (cart_item.barcode == selected_barcode) {
+                                cart_item.qty = new_qty;
+                                cart_item.total = new_qty * parseFloat(cart_item.price);
+                                return cart_item;
+                            }
+                        });
+
+                        localStorage.setItem("cart", JSON.stringify(cart));
+
+                        loadCart();
+                        computeSubtotal();
+
+                        $(this).focus();
+                    });
+                    $('.delete-item').click(function() {
+                        const selected_barcode = $(this).attr('barcode');
+
+                        let new_cart = [];
+
+                        cart.map(cart_item => {
+                            if (cart_item.barcode != selected_barcode) {
+                                new_cart.push(cart_item);
+                            }
+                        });
+
+                        cart = new_cart;
+                        localStorage.setItem("cart", JSON.stringify(cart));
+
+                        loadCart();
+                        computeSubtotal();
+                    });
+                    ctr++;
+                });
+            }
+            function displayTransactionNo() {
+                $("#transaction-no").html(transactionNo)
+            }
+            function displayTransactionDatetime() {
+                const date = new Date();
+                let day = date.getDate();
+                let month = date.getMonth() + 1;
+                let year = date.getFullYear();
+
+                var hours = date.getHours();
+                var minutes = date.getMinutes();
+                var ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+                var strTime = hours + ':' + minutes + ' ' + ampm;
+
+                currentDate = `${month}/${day}/${year} ${strTime}`;
+                $("#transaction-datetime").html(currentDate)
+            }
+            function computeSubtotal() {
+                subtotal = 0;
+
+                cart.map(cart_item => {
+                    subtotal = subtotal + cart_item.total;
+                });
+
+                $("#transaction-subtotal").html(`&#8369; ${(subtotal).toFixed(2)}`);
+
+                let vatSales = subtotal - (subtotal * .12);
+                let vatAmount = subtotal - vatSales;
+
+                $("#vat-amount").html((vatAmount).toFixed(2));
+            }
+            function displayChange() {
+                $("#transaction-change").html(change);
+            }
+            displayTransactionNo();
+            displayTransactionDatetime();
+            loadCart();
+            computeSubtotal();
+            $("#transaction-amount-paid").focus();
+            $("#back").click(() => {
+                window.location.replace("dashboard.html");
+            });
+            $("#transaction-amount-paid").keyup(() => {
+                const barcode = $("#input-barcode").val();
+                amountPaid = $("#transaction-amount-paid").val();
+                try {
+                    if (amountPaid >= subtotal) {
+                        change = (amountPaid - subtotal).toFixed(2);
+                        displayChange();
+                        $("#finish-transaction-btn").prop('disabled', false);
+                    } else {
+                        change = null;
+                        displayChange();
+                        $("#finish-transaction-btn").prop('disabled', true);
+                    }
+                } catch (err) { }
+            });
+            $("#btn-confirm").click(() => {
+                localStorage.setItem("datetime", currentDate);
+                localStorage.setItem("subtotal", subtotal);
+                localStorage.setItem("amount_paid", amountPaid);
+                localStorage.setItem("change", change);
+
+                const formData = new FormData();
+                formData.append('transaction_no', transactionNo);
+                formData.append('current_date', currentDate);
+                formData.append('subtotal', subtotal);
+                formData.append('amount_paid', amountPaid);
+                formData.append('change', change);
+                formData.append('cart', JSON.stringify({cart: cart}));
+
+                fetch("addTransaction.php", {
+                    method: "POST",
+                    body: formData,
+                }).then(function (response) {
+                    return response.text();
+                }).then(function (response) {
+                    res = JSON.parse(response);
+
+                    window.location.replace("receipt.html");
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

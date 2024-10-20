@@ -1,0 +1,346 @@
+<html>
+
+<head>
+    <title>POS - Cashier</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        .left-side-menu {
+            background-color: #332422;
+        }
+
+        .dashboard-header,
+        .right-side-menu {
+            background-color: #5DADE2;
+        }
+
+        .items-container {
+            margin-top: 100px;
+            height: calc(100% - 150px);
+            background-color: #D5D8DC;
+        }
+
+        .items-list {
+            height: calc(100% - 215px);
+            background-color: #FFFFFF;
+            overflow-y: auto;
+        }
+
+        .items-total-compute {
+            background-color: #5DADE2;
+        }
+
+        .checkout-btn {
+            margin-top: -80px;
+        }
+
+        .checkout-btn,
+        .checkout-btn:hover {
+            background-color: #5DADE2;
+        }
+
+        .input-item-qty {
+            width: 60px;
+        }
+
+        .item-price-details {
+            vertical-align: middle;
+            width: 170px;
+        }
+
+        #latest-scanned-container {
+            height: calc(100% - 100px);
+        }
+
+        #img-latest-scanned {
+            width: 200px;
+            height: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid p-0" style="height: 100%;">
+        <div class="row g-0 text-center" style="height: inherit;">
+            <div class="col-sm-6 col-md-8 left-side-menu">
+                <div class="dashboard-header">
+                    <div class="text-white" style="position: absolute; padding: 14px;" id="logout">
+                        <span class="h3">&lt;</span>
+                        <span>Logout</span>
+                    </div>
+                    <h1 class="h3 pt-3 pb-3 fw-normal text-white">Aldrinos</h1>
+                </div>
+                <div class="d-flex justify-content-center align-items-center" id="latest-scanned-container">
+                    <div>
+                        <div>
+                            <h3 class="fw-bold text-white">Latest scanned</h3>
+                        </div>
+                        <img src="images/placeholder.png" id="img-latest-scanned" class="my-4" />
+                        <div>
+                            <table class="table table-borderless text-white" id="table-latest-scanned">
+                                <tbody id="tbody-latest-scanned">
+                                    <tr>
+                                        <td scope="row" class="text-left text-break">
+                                            Item name:
+                                        </td>
+                                        <td id="td-latest-scanned-item-name">
+                                            -
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="row" class="text-left text-break">
+                                            Item code:
+                                        </td>
+                                        <td id="td-latest-scanned-item-code">
+                                            -
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td scope=" row" class="text-left text-break">
+                                            Quantity
+                                        </td>
+                                        <td id="td-latest-scanned-item-qty">
+                                            -
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="row" class="text-left text-break">
+                                            Price:
+                                        </td>
+                                        <td id="td-latest-scanned-item-price">
+                                            -
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 p-4 right-side-menu">
+                <div class="items-container py-4 d-flex align-content-between flex-wrap">
+                    <div class="w-100">
+                        <div class="row m-0">
+                            <div class="col fw-bold text-start ps-4">
+                                Transaction No.:
+                            </div>
+                            <div class="col fw-bold text-end pe-4" id="transaction-no" style="font-size: 10px;"></div>
+                        </div>
+                        <div class="row m-0">
+                            <div class="col fw-bold text-start px-4 mt-1">
+                                <div class="input-group">
+                                    <textarea class="form-control" name="input-barcode" id="input-barcode"
+                                        rows="1"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100 p-4">
+                        <div class="w-100">
+                            <div class="items-list">
+                                <table class="table" id="table-items">
+                                    <tbody id="tbody-items"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="w-100 pt-2">
+                            <div class="row mx-0">
+                                <div class="col fw-bold text-start">
+                                    Subtotal:
+                                </div>
+                                <div class="col fw-bold text-end" id="cart-subtotal">
+                                    &#8369; 0.00
+                                </div>
+                            </div>
+                            <div class="row mx-0">
+                                <div class="col fw-bold text-start">
+                                    VAT Sales:
+                                </div>
+                                <div class="col fw-bold text-end" id="vat-sales">
+                                    &#8369; 0.00
+                                </div>
+                            </div>
+                            <div class="row mx-0">
+                                <div class="col fw-bold text-start">
+                                    VAT AMT (12%):
+                                </div>
+                                <div class="col fw-bold text-end" id="vat-amount">
+                                    &#8369; 0.00
+                                </div>
+                            </div>
+                            <div class="row text-white mx-0 mt-2 py-2 items-total-compute">
+                                <div class="col fs-4 fw-bold text-start">
+                                    Total:
+                                </div>
+                                <div class="col fs-4 fw-bold text-end" id="cart-total">
+                                    &#8369; 0.00
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100">
+                        <div class="row mx-0">
+                            <div class="col fs-4 fw-bold text-start">
+                                <button class="w-100 btn btn-lg text-white rounded-pill checkout-btn" id="checkout-btn">
+                                    Checkout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.slim.min.js"
+        integrity="sha256-ZwqZIVdD3iXNyGHbSYdsmWP//UBokj2FHAxKuSBKDSo=" crossorigin="anonymous"></script>
+    <script src="js/items.js"></script>
+    <script src="js/history.js"></script>
+    <script>
+        $(document).ready(() => {
+            var transactionNo = null;
+            const localStorageCart = JSON.parse(localStorage.getItem("cart"));
+            const localStoragetransactionNo = localStorage.getItem("transaction_no");
+            if (localStorageCart) {
+                cart = localStorageCart;
+            }
+            if (localStoragetransactionNo) {
+                transactionNo = localStoragetransactionNo;
+            } else {
+                transactionNo = generateTransactionNo();
+            }
+            function generateTransactionNo() {
+                return (Date.now() + ((Math.random() * 100000).toFixed()));
+            }
+            function displayTransactionNo() {
+                $("#transaction-no").html(transactionNo)
+            }
+            function clearCart() {
+                $("#table-items > #tbody-items").html("");
+            }
+            function refreshCart() {
+                $("#table-items > #tbody-items").html("");
+                cart.map(cart_item => {
+                    $("#table-items > #tbody-items").append(`
+                        <tr>
+                            <td scope="row" class="text-left text-break">
+                                <span class="fw-bold" style="font-size: 12px;">${cart_item.name}</span>
+                                <br>
+                                <span style="font-size: 10px;">${cart_item.code}</span>
+                            </td>
+                            <td class="item-price-details" align="right">
+                                <input 
+                                    class="input-item-qty" 
+                                    type="number" 
+                                    min="0" 
+                                    max="999"
+                                    maxlength="3" 
+                                    value="${cart_item.qty}" 
+                                    barcode="${cart_item.barcode}"
+                                    id="input-${cart_item.barcode}"
+                                    readonly
+                                /> &#8369; ${(cart_item.total).toFixed(2)}
+                            </td>
+                        </tr>
+                    `);
+                });
+            }
+            function computeSubtotal() {
+                let subtotal = 0;
+                cart.map(cart_item => {
+                    subtotal = subtotal + cart_item.total;
+                });
+                $("#cart-subtotal").html(`&#8369; ${(subtotal).toFixed(2)}`);
+
+                let vatSales = subtotal - (subtotal * .12);
+                let vatAmount = subtotal - vatSales;
+
+                $("#vat-sales").html(`&#8369; ${(vatSales).toFixed(2)}`);
+                $("#vat-amount").html(`&#8369; ${(vatAmount).toFixed(2)}`);
+            }
+            function computeTotal() {
+                let total = 0;
+                cart.map(cart_item => {
+                    total = total + cart_item.total;
+                });
+                $("#cart-total").html(`&#8369; ${(total).toFixed(2)}`);
+            }
+            refreshCart();
+            computeSubtotal();
+            computeTotal();
+            displayTransactionNo();
+            function computeCart(e) {
+                const barcode = ($("#input-barcode").val()).trim();
+                const itemFound = product_items[barcode];
+                if (
+                    event.key === "Enter" ||
+                    itemFound
+                ) {
+                    const itemCartFound = cart.find((item_cart) => item_cart.barcode == barcode);
+                    let latest_qty = 0;
+                    if (itemCartFound) {
+                        cart.map(cart_item => {
+                            if (cart_item.barcode == barcode) {
+                                cart_item.qty = cart_item.qty + 1;
+                                cart_item.total = cart_item.price * cart_item.qty;
+                                latest_qty = cart_item.qty;
+
+                                return cart_item;
+                            }
+                        });
+                    } else {
+                        cart.push({
+                            "barcode": barcode,
+                            "name": itemFound.name,
+                            "code": itemFound.code,
+                            "price": itemFound.price,
+                            "image": itemFound.image,
+                            "total": (itemFound.price * 1),
+                            "qty": 1
+                        });
+                        latest_qty = 1;
+                    }
+                    $("#img-latest-scanned").attr("src", `images/${itemFound.image}`)
+                    $("#td-latest-scanned-item-name").html(itemFound.name);
+                    $("#td-latest-scanned-item-code").html(itemFound.code);
+                    $("#td-latest-scanned-item-qty").html(latest_qty);
+                    $("#td-latest-scanned-item-price").html(itemFound.price);
+                    refreshCart();
+                    computeSubtotal();
+                    computeTotal();
+                    $("#input-barcode").val("");
+                }
+            }
+            $("#input-barcode").focus();
+            $("#input-barcode").keyup((e) => {
+                computeCart(e);
+            });
+            $("#input-barcode").change((e) => {
+                computeCart(e);
+            });
+            $("#input-barcode").change((e) => {
+                computeCart(e);
+            });
+            $("#checkout-btn").click(() => {
+                localStorage.setItem("cart", JSON.stringify(cart));
+                localStorage.setItem("transaction_no", transactionNo);
+                window.location.replace("checkout.html");
+            });
+            $("#logout").click(() => {
+                localStorage.removeItem("cart");
+                localStorage.removeItem("transaction_no");
+                window.location.replace("index.html");
+            });
+        });
+    </script>
+</body>
+
+</html>
