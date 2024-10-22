@@ -43,14 +43,18 @@ foreach ($summary as $key => $value) {
   $sql = "SELECT `barcode`, `category` FROM products WHERE barcode = '" . $key . "'";
   $result = $conn->query($sql);
   $product = $result->fetch_assoc();
-  $product_categories[$key] = $product['category'];
+  if (!empty($product['category'])) {
+    $product_categories[$key] = $product['category'];
+  }
 }
 
 foreach ($summary as $key => $value) {
-  if (isset($aggregate[$product_categories[$key]])) {
-    $aggregate[$product_categories[$key]] =  $aggregate[$product_categories[$key]] + $value;
-  } else {
-    $aggregate[$product_categories[$key]] =  $value;
+  if (!empty($product_categories[$key])) {
+    if (isset($aggregate[$product_categories[$key]])) {
+      $aggregate[$product_categories[$key]] =  $aggregate[$product_categories[$key]] + $value;
+    } else {
+      $aggregate[$product_categories[$key]] =  $value;
+    }
   }
 }
 

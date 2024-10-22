@@ -29,14 +29,14 @@ if ($result->num_rows > 0) {
           "name" => $item['name'],
           "code" => $item['code'],
           "qty" => $summary[$item['barcode']]['qty'] + $item['qty'],
-          "total" => number_format($summary[$item['barcode']]['total'] + $item['total'], 2)
+          "total" => number_format((double) $summary[$item['barcode']]['total'] + (double) $item['total'], 2)
         ];
       } else {
         $summary[$item['barcode']] = [
           "name" => $item['name'],
           "code" => $item['code'],
           "qty" => $item['qty'],
-          "total" => number_format($item['total'], 2),
+          "total" => number_format((double) $item['total'], 2),
         ];
       }
     }
