@@ -1,8 +1,7 @@
 var cart = [];
 var product_items = {};
 
-// fetch("../fetchProducts.php", {
-fetch("/pos/mobile-web/fetchProducts.php", {
+fetch("../fetchProducts.php", {
     method: "GET",
 }).then(function (response) {
     return response.text();

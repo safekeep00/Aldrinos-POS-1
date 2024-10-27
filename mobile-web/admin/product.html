@@ -335,8 +335,8 @@
                     $("#product-qty").val(item[0]?.qty);
                     $("#product-qty_unit").val(item[0]?.qty_unit);
                     $("#product-qty_stock_threshold").val(item[0]?.qty_stock_threshold);
-                    $("#product-image").attr("src", `/pos/mobile-web/images/${item[0]?.image}`);
-                    //$("#product-image").attr("src", `/images/${item[0]?.image}`);
+                    // $("#product-image").attr("src", `/pos/mobile-web/images/${item[0]?.image}`);
+                    $("#product-image").attr("src", `/images/${item[0]?.image}`);
                     $("#delete-link").attr("href", `deleteItem.php?id=${item[0]?.id}`);
                 }
             });
