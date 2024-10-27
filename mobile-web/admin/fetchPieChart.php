@@ -40,7 +40,7 @@ if ($result->num_rows > 0) {
 }
 
 foreach ($summary as $key => $value) {
-  $sql = "SELECT `barcode`, `category` FROM products WHERE barcode = '" . $key . "'";
+  $sql = "SELECT `barcode`, `category` FROM products WHERE barcode = '" . $key . "' or code = '" . $key . "'";
   $result = $conn->query($sql);
   $product = $result->fetch_assoc();
   if (!empty($product['category'])) {
