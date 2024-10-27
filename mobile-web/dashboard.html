@@ -281,7 +281,6 @@
                 const barcode = ($("#input-barcode").val()).trim();
                 let itemFoundViaCode = null;
                 for (const [key, value] of Object.entries(product_items)) {
-                    console.log(key, value);
                     if (value["code"] == barcode) {
                         itemFoundViaCode = product_items[key];
                     }
