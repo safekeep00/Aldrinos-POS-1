@@ -280,11 +280,12 @@
             function computeCart(e) {
                 const barcode = ($("#input-barcode").val()).trim();
                 const itemFoundViaCode = null;
-                product_items.map(item => {
-                    if (item["code"] == barcode) {
-                        itemFoundViaCode = item;
+                for (const [key, value] of Object.entries(product_items)) {
+                    console.log(key, value);
+                    if (value["code"] == barcode) {
+                        itemFoundViaCode = product_items[key];
                     }
-                })
+                }
                 const itemFound = product_items[barcode] || itemFoundViaCode;
                 if (
                     event.key === "Enter" ||
