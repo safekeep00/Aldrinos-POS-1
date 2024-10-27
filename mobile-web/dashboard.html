@@ -279,7 +279,13 @@
             displayTransactionNo();
             function computeCart(e) {
                 const barcode = ($("#input-barcode").val()).trim();
-                const itemFound = product_items[barcode];
+                const itemFoundViaCode = null;
+                product_items.map(item => {
+                    if (item["code"] == barcode) {
+                        itemFoundViaCode = item;
+                    }
+                })
+                const itemFound = product_items[barcode] || itemFoundViaCode;
                 if (
                     event.key === "Enter" ||
                     itemFound
