@@ -21,7 +21,7 @@ if (isset($year)) {
         current_year_mons_sale.subtotal, 
         DATE_FORMAT(current_year_mons_sale.month_sale, '%c') as mon 
       FROM (
-        SELECT subtotal, STR_TO_DATE(`current_date`, '%c/%d/%Y') as month_sale FROM transactions WHERE `current_date` LIKE concat('%', '/__/${year}', '%')
+        SELECT subtotal, STR_TO_DATE(`current_date`, '%c/%d/%Y') as month_sale FROM transactions WHERE `current_date` LIKE concat('%', '/${year}_', '%')
       ) as current_year_mons_sale
     ) as summary_current_year_mons_sale
     GROUP BY
@@ -38,7 +38,7 @@ if (isset($year)) {
         current_year_mons_sale.subtotal, 
         DATE_FORMAT(current_year_mons_sale.month_sale, '%c') as mon 
       FROM (
-        SELECT subtotal, STR_TO_DATE(`current_date`, '%c/%d/%Y') as month_sale FROM transactions WHERE `current_date` LIKE concat('%', date_format(curdate(), '/__/%Y'), '%')
+        SELECT subtotal, STR_TO_DATE(`current_date`, '%c/%d/%Y') as month_sale FROM transactions WHERE `current_date` LIKE concat('%', date_format(curdate(), '/%Y_'), '%')
       ) as current_year_mons_sale
     ) as summary_current_year_mons_sale
     GROUP BY

@@ -12,7 +12,7 @@ if ($conn->connect_error) {
 $year = isset($_GET['year']) ? $_GET['year'] : null;
 
 if (isset($year)) {
-  $sql = "SELECT cart FROM transactions WHERE `current_date` LIKE concat('%', '/__/${year}', '%')";
+  $sql = "SELECT cart FROM transactions WHERE `current_date` LIKE concat('%', '/${year}_', '%')";
 } else {
   $sql = "SELECT cart FROM transactions WHERE `current_date` LIKE concat('%', date_format(curdate(), '%c/%e/%Y'), '%')";
 }
