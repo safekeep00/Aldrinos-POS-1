@@ -32,7 +32,7 @@ $total_total = $total_total_query->fetch_assoc();
 
 $dashboard = [
   "total_transaction_today" => $total_transaction_today['total_count'] ?? 0,
-  "total_sales_today" => "₱ " . ($total_total['total_total'] ?? 0),
+  "total_sales_today" => "₱ " . (number_format($total_total['total_total'], 2, ".", ",") ?? 0),
 ];
 
 $conn->close();

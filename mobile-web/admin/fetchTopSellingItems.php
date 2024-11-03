@@ -47,8 +47,8 @@ $conn->close();
 
 function invenDescSort($item1,$item2)
 {
-    if ($item1['total'] == $item2['total']) return 0;
-    return ($item1['total'] < $item2['total']) ? 1 : -1;
+    if ($item1['qty'] == $item2['qty']) return 0;
+    return ($item1['qty'] < $item2['qty']) ? 1 : -1;
 }
 usort($summary,'invenDescSort');
 
