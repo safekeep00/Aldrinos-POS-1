@@ -21,7 +21,7 @@ $total_transaction_today_query = $conn->query($sql);
 $total_transaction_today = $total_transaction_today_query->fetch_assoc();
 
 if (isset($year)) {
-  $sql = "SELECT SUM(subtotal) as total_total FROM transactions WHERE `current_date` LIKE concat('%', '/__/${year}', '%')";
+  $sql = "SELECT SUM(subtotal) as total_total FROM transactions WHERE `current_date` LIKE concat('%', '/${year}_', '%')";
 } else {
   $sql = "SELECT SUM(subtotal) as total_total FROM transactions WHERE `current_date` LIKE concat('%', date_format(curdate(), '%c/%e/%Y'), '%')";
 }
