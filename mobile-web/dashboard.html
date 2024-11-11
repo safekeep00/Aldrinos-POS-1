@@ -135,8 +135,9 @@
                         <div class="row m-0">
                             <div class="col fw-bold text-start px-4 mt-1">
                                 <div class="input-group">
-                                    <textarea class="form-control" name="input-barcode" id="input-barcode"
-                                        rows="1"></textarea>
+                                    <!-- <textarea class="form-control" name="input-barcode" id="input-barcode" rows="1"
+                                        style="resize: none"></textarea> -->
+                                    <input type="text" class="form-control" name="input-barcode" id="input-barcode" />
                                 </div>
                             </div>
                         </div>
@@ -202,10 +203,12 @@
         crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.3.slim.min.js"
         integrity="sha256-ZwqZIVdD3iXNyGHbSYdsmWP//UBokj2FHAxKuSBKDSo=" crossorigin="anonymous"></script>
+    <script src="js/sugar.min.js"></script>
     <script src="js/items.js"></script>
     <script src="js/history.js"></script>
     <script>
         $(document).ready(() => {
+            const nFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2 });
             var transactionNo = null;
             const localStorageCart = JSON.parse(localStorage.getItem("cart"));
             const localStoragetransactionNo = localStorage.getItem("transaction_no");
@@ -227,6 +230,7 @@
                 $("#table-items > #tbody-items").html("");
             }
             function refreshCart() {
+
                 $("#table-items > #tbody-items").html("");
                 cart.map(cart_item => {
                     $("#table-items > #tbody-items").append(`
@@ -247,7 +251,7 @@
                                     barcode="${cart_item.barcode}"
                                     id="input-${cart_item.barcode}"
                                     readonly
-                                /> &#8369; ${(cart_item.total).toFixed(2)}
+                                /> &#8369; ${(nFormat.format(cart_item.total))}
                             </td>
                         </tr>
                     `);
@@ -258,20 +262,20 @@
                 cart.map(cart_item => {
                     subtotal = subtotal + cart_item.total;
                 });
-                $("#cart-subtotal").html(`&#8369; ${(subtotal).toFixed(2)}`);
+                $("#cart-subtotal").html(`&#8369; ${nFormat.format(subtotal)}`);
 
                 let vatSales = subtotal - (subtotal * .12);
                 let vatAmount = subtotal - vatSales;
 
-                $("#vat-sales").html(`&#8369; ${(vatSales).toFixed(2)}`);
-                $("#vat-amount").html(`&#8369; ${(vatAmount).toFixed(2)}`);
+                $("#vat-sales").html(`&#8369; ${nFormat.format(vatSales)}`);
+                $("#vat-amount").html(`&#8369; ${nFormat.format(vatAmount)}`);
             }
             function computeTotal() {
                 let total = 0;
                 cart.map(cart_item => {
                     total = total + cart_item.total;
                 });
-                $("#cart-total").html(`&#8369; ${(total).toFixed(2)}`);
+                $("#cart-total").html(`&#8369; ${nFormat.format(total)}`);
             }
             refreshCart();
             computeSubtotal();
@@ -343,7 +347,7 @@
             $("#logout").click(() => {
                 localStorage.removeItem("cart");
                 localStorage.removeItem("transaction_no");
-                window.location.replace("index.html");
+                window.location.replace("index.php");
             });
         });
     </script>

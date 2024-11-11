@@ -136,6 +136,7 @@
     <script src="js/history.js"></script>
     <script>
         $(document).ready(() => {
+            const nFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2 });
             var ua = navigator.userAgent.toLowerCase();
             var isAndroid = ua.indexOf("android") > -1; //&& ua.indexOf("mobile");
 
@@ -211,7 +212,7 @@
                                 <br>
                                 <span>${cart_item.code}</span>
                                 <br>
-                                &#8369; ${(cart_item.total).toFixed(2)}
+                                &#8369; ${nFormat.format(cart_item.total)}
                             </td>
                         </tr>
                     `);
@@ -231,19 +232,19 @@
                 $("#transaction-datetime").html(currentDate)
             }
             function displaySubtotal() {
-                $("#transaction-subtotal").html(subtotal);
+                $("#transaction-subtotal").html(nFormat.format(subtotal));
 
                 let vatSales = subtotal - (subtotal * .12);
                 let vatAmount = subtotal - vatSales;
 
-                $("#vat-sales").html((vatSales).toFixed(2));
-                $("#vat-amount").html((vatAmount).toFixed(2));
+                $("#vat-sales").html(nFormat.format(vatSales));
+                $("#vat-amount").html(nFormat.format(vatAmount));
             }
             function displayAmountPaid() {
-                $("#transaction-amount-paid").html(amountPaid);
+                $("#transaction-amount-paid").html(nFormat.format(amountPaid));
             }
             function displayChange() {
-                $("#transaction-change").html(change);
+                $("#transaction-change").html(nFormat.format(change));
             }
             displayTransactionNo();
             displayTransactionDatetime();
