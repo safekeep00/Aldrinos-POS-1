@@ -29,6 +29,14 @@
             background-color: #5DADE2;
         }
     </style>
+    <script>
+        function limitDecimalPlaces(e, count) {
+            if (e.target.value.indexOf('.') == -1) { return; }
+            if ((e.target.value.length - e.target.value.indexOf('.')) > count) {
+                e.target.value = parseFloat(e.target.value).toFixed(count);
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -68,7 +76,8 @@
                         <span class="fw-bold print-font">VAT AMT (12%): &#8369; <span id="vat-amount"></span></span>
                         <br>
                         Amount Paid: &#8369;
-                        <input type="number" id="transaction-amount-paid" />
+                        <input type="number" id="transaction-amount-paid" min="0"
+                            oninput="limitDecimalPlaces(event, 2)" />
                         <br>
                         Change: &#8369; <span id="transaction-change"></span>
                     </div>
@@ -112,6 +121,7 @@
     <script src="js/history.js"></script>
     <script>
         $(document).ready(() => {
+            const nFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2 });
             var transactionNo = null;
             var currentDate = null;
             var subtotal = 0;
@@ -128,10 +138,6 @@
             function loadCart() {
                 $("#table-cart > #tbody-cart").html("");
                 var ctr = 1;
-
-
-                console.log(cart);
-
                 cart.map(cart_item => {
                     $("#table-cart > #tbody-cart").append(`
                         <tr>
@@ -165,14 +171,14 @@
                                 />
                             </td>
                             <td style="text-align: right;">
-                                &#8369; ${(cart_item.total).toFixed(2)}
+                                &#8369; ${nFormat.format(cart_item.total)}
                             </td>
                         </tr>
                     `);
-                    $('.input-item-qty').change(function() {
+                    $('.input-item-qty').change(function () {
                         const selected_barcode = $(this).attr('barcode');
                         const new_qty = $(this).val();
-                        
+
                         cart.map(cart_item => {
                             if (cart_item.barcode == selected_barcode) {
                                 cart_item.qty = new_qty;
@@ -188,7 +194,7 @@
 
                         $(this).focus();
                     });
-                    $('.delete-item').click(function() {
+                    $('.delete-item').click(function () {
                         const selected_barcode = $(this).attr('barcode');
 
                         let new_cart = [];
@@ -235,15 +241,15 @@
                     subtotal = subtotal + cart_item.total;
                 });
 
-                $("#transaction-subtotal").html(`&#8369; ${(subtotal).toFixed(2)}`);
+                $("#transaction-subtotal").html(`&#8369; ${nFormat.format(subtotal)}`);
 
                 let vatSales = subtotal - (subtotal * .12);
                 let vatAmount = subtotal - vatSales;
 
-                $("#vat-amount").html((vatAmount).toFixed(2));
+                $("#vat-amount").html(nFormat.format(vatAmount));
             }
             function displayChange() {
-                $("#transaction-change").html(change);
+                $("#transaction-change").html(nFormat.format(change));
             }
             displayTransactionNo();
             displayTransactionDatetime();
@@ -280,7 +286,7 @@
                 formData.append('subtotal', subtotal);
                 formData.append('amount_paid', amountPaid);
                 formData.append('change', change);
-                formData.append('cart', JSON.stringify({cart: cart}));
+                formData.append('cart', JSON.stringify({ cart: cart }));
 
                 fetch("addTransaction.php", {
                     method: "POST",
