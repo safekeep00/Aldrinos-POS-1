@@ -262,6 +262,7 @@
 
     <script>
         $(document).ready(() => {
+            const nFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2 });
             var transactions = [];
 
             fetch("fetchTransactions.php", {
@@ -286,36 +287,36 @@
                             { data: 'current_date' },
                             { data: 'transaction_no' },
                             {
-                              data: 'subtotal',
-                              render: (data, type, row) => {
-                                return `<div style="text-align: right;">&#8369; ${data}</div>`
-                              }
+                                data: 'subtotal',
+                                render: (data, type, row) => {
+                                    return `<div style="text-align: right;">&#8369; ${nFormat.format(data)}</div>`
+                                }
                             },
                             {
-                              data: 'amount_paid',
-                              render: (data, type, row) => {
-                                return `<div style="text-align: right;">&#8369; ${data}</div>`
-                              }
+                                data: 'amount_paid',
+                                render: (data, type, row) => {
+                                    return `<div style="text-align: right;">&#8369; ${nFormat.format(data)}</div>`
+                                }
                             },
                             {
-                              data: 'change',
-                              render: (data, type, row) => {
-                                return `<div style="text-align: right;">&#8369; ${data}</div>`
-                              }
+                                data: 'change',
+                                render: (data, type, row) => {
+                                    return `<div style="text-align: right;">&#8369; ${nFormat.format(data)}</div>`
+                                }
                             },
                             {
-                              data: 'transaction_no',
-                              render: (data, type, row) => {
-                                try {
-                                  return `
+                                data: 'transaction_no',
+                                render: (data, type, row) => {
+                                    try {
+                                        return `
                                     <a href="transactions.html?transaction_no=${data}">
                                       View
                                     </a>
                                   `;
-                                } catch (err) {
-                                  console.log(err);
-                                }
-                              },
+                                    } catch (err) {
+                                        console.log(err);
+                                    }
+                                },
                             }
                         ],
                     }
@@ -342,7 +343,7 @@
                                     ${cart_item.qty}
                                 </td>
                                 <td class="print-font">
-                                    &#8369; ${(cart_item.total).toFixed(2)}
+                                    &#8369; ${nFormat.format(cart_item.total)}
                                 </td>
                             </tr>
                         `);

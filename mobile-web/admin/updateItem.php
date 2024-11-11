@@ -6,7 +6,7 @@ try {
   if (isset($_POST['submit'])) {
 
     $id = $_POST['id'];
-    $barcode = $_POST['barcode'];
+    $barcode = str_replace("-", "", $_POST['barcode']);
     $name = $_POST['name'];
     $category = $_POST['category'];
     $code = $_POST['code'];

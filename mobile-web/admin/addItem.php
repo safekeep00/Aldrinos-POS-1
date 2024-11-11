@@ -5,7 +5,7 @@ require '../config.php';
 try {
   if (isset($_POST['submit'])) {
 
-    $barcode = $_POST['barcode'];
+    $barcode = str_replace("-", "", $_POST['barcode']);
     $name = $_POST['name'];
     $category = $_POST['category'];
     $code = $_POST['code'];

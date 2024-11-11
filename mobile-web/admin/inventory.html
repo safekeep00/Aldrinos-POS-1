@@ -236,6 +236,8 @@
 
     <script>
         $(document).ready(() => {
+            const nFormat = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2 });
+
             fetch("fetchInventory.php", {
                 method: "GET",
             }).then(function (response) {
@@ -243,39 +245,39 @@
             }).then(function (response) {
                 const product_items = JSON.parse(response);
                 $('#inventoryTable').DataTable({
-                  data: product_items,
-                  sort: false,
-                  columns: [
-                    { data: 'id' },
-                    { data: 'barcode' },
-                    { data: 'name' },
-                    { data: 'category' },
-                    { data: 'qty_stock_threshold' },
-                    { data: 'qty' },
-                    {
-                        data: 'price',
-                        render: (data, type, row) => {
-                            return `<div style="text-align: right;">&#8369; ${data}</div>`
-                        }
-                    },
-                    {
-                      data: 'id',
-                      render: (data, type, row) => {
-                        try {
-                          return `
+                    data: product_items,
+                    sort: false,
+                    columns: [
+                        { data: 'id' },
+                        { data: 'barcode' },
+                        { data: 'name' },
+                        { data: 'category' },
+                        { data: 'qty_stock_threshold' },
+                        { data: 'qty' },
+                        {
+                            data: 'price',
+                            render: (data, type, row) => {
+                                return `<div style="text-align: right;">&#8369; ${nFormat.format(data)}</div>`
+                            }
+                        },
+                        {
+                            data: 'id',
+                            render: (data, type, row) => {
+                                try {
+                                    return `
                             <a href="product.html?id=${data}">
                               View
                             </a>
                           `;
-                        } catch (err) {
-                          console.log(err);
+                                } catch (err) {
+                                    console.log(err);
+                                }
+                            },
                         }
-                      },
-                    }
-                  ],
+                    ],
                 });
             });
-            
+
         });
     </script>
 </body>

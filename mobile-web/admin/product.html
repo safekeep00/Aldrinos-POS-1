@@ -29,6 +29,7 @@
             background-image: linear-gradient(180deg, #5DADE2 10%, #332422 100%);
             background-size: cover;
         }
+
         .product-field {
             vertical-align: middle !important;
         }
@@ -150,7 +151,8 @@
                                     <button class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back</button>
                                 </a>
 
-                                <a href="#" id="delete-link" title="Delete" onclick="return confirm('Are you sure you want to delete this item?')">
+                                <a href="#" id="delete-link" title="Delete"
+                                    onclick="return confirm('Are you sure you want to delete this item?')">
                                     <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
                                 </a>
                             </h6>
@@ -168,20 +170,24 @@
                                         <tr>
                                             <td class="product-field">Barcode</td>
                                             <td>
-                                                <input class="form-control" type="hidden" name="id" id="product-id" readonly>
-                                                <input class="form-control" type="text" name="barcode" id="product-barcode" required>
+                                                <input class="form-control" type="hidden" name="id" id="product-id"
+                                                    readonly>
+                                                <input class="form-control" type="number" name="barcode"
+                                                    id="product-barcode" min="0" required>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="product-field">Name</td>
                                             <td>
-                                                <input class="form-control" type="text" name="name" id="product-name" required>
+                                                <input class="form-control" type="text" name="name" id="product-name"
+                                                    required>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="product-field">Category</td>
                                             <td>
-                                                <select class="form-control" type="text" name="category" id="product-category" required>
+                                                <select class="form-control" type="text" name="category"
+                                                    id="product-category" required>
                                                     <option value="Canned Goods">Canned Goods</option>
                                                     <option value="Fruits">Fruits</option>
                                                     <option value="Vegetables">Vegetables</option>
@@ -198,7 +204,8 @@
                                                     <option value="Frozen Foods">Frozen Foods</option>
                                                     <option value="Personal Care">Personal Care</option>
                                                     <option value="Health Care">Health Care</option>
-                                                    <option value="Household & Cleaning Supplies">Household & Cleaning Supplies</option>
+                                                    <option value="Household & Cleaning Supplies">Household & Cleaning
+                                                        Supplies</option>
                                                     <option value="Baby Items">Baby Items</option>
                                                     <option value="Pet Care">Pet Care</option>
                                                 </select>
@@ -207,25 +214,29 @@
                                         <tr>
                                             <td class="product-field">Code</td>
                                             <td>
-                                                <input class="form-control" type="text" name="code" id="product-code" required>
+                                                <input class="form-control" type="text" name="code" id="product-code"
+                                                    required>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="product-field">Price</td>
                                             <td>
-                                                <input class="form-control" type="number" name="price" id="product-price" step=".01" required>
+                                                <input class="form-control" type="number" name="price"
+                                                    id="product-price" step=".01" min="0" required>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="product-field">Quantity</td>
                                             <td>
-                                                <input class="form-control" type="number" name="qty" id="product-qty" required>
+                                                <input class="form-control" type="number" name="qty" min="0"
+                                                    id="product-qty" required>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="product-field">Quantity Unit</td>
                                             <td>
-                                                <select class="form-control" type="text" name="qty_unit" id="product-qty_unit" required>
+                                                <select class="form-control" type="text" name="qty_unit"
+                                                    id="product-qty_unit" required>
                                                     <option value="piece">Piece</option>
                                                     <option value="Box">Box</option>
                                                 </select>
@@ -234,14 +245,17 @@
                                         <tr>
                                             <td class="product-field">Stock Threshold</td>
                                             <td>
-                                                <input class="form-control" type="number" name="qty_stock_threshold" id="product-qty_stock_threshold" required>
+                                                <input class="form-control" type="number" name="qty_stock_threshold"
+                                                    min="0" id="product-qty_stock_threshold" required>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="product-field">Image</td>
                                             <td>
-                                                <img id="product-image" src="#" style="width: 200px; height: auto; display: block;">
-                                                <input type="file" id="product-image-upload" name="image" style="margin-top: 20px;">
+                                                <img id="product-image" src="#"
+                                                    style="width: 200px; height: auto; display: block;">
+                                                <input type="file" id="product-image-upload" name="image"
+                                                    style="margin-top: 20px;">
                                             </td>
                                         </tr>
                                     </tbody>
@@ -323,11 +337,11 @@
                 return response.text();
             }).then(function (response) {
                 const item = JSON.parse(response);
-                
+
                 if (item.length > 0) {
                     $("#product-id-label").html(item[0]?.id);
                     $("#product-id").val(item[0]?.id);
-                    $("#product-barcode").val(item[0]?.barcode);
+                    $("#product-barcode").val(parseInt(item[0]?.barcode));
                     $("#product-name").val(item[0]?.name);
                     $("#product-category").val(item[0]?.category);
                     $("#product-code").val(item[0]?.code);
@@ -341,7 +355,7 @@
                 }
             });
 
-            $('#product-image-upload').change(function() {
+            $('#product-image-upload').change(function () {
                 var input = this;
                 var url = $(this).val();
                 var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
@@ -349,7 +363,7 @@
                     var reader = new FileReader();
 
                     reader.onload = function (e) {
-                       $('#product-image').attr('src', e.target.result);
+                        $('#product-image').attr('src', e.target.result);
                     }
 
                     reader.readAsDataURL(input.files[0]);
