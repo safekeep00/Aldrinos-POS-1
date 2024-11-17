@@ -162,9 +162,11 @@
                                 <input 
                                     class="input-item-qty" 
                                     type="number" 
-                                    min="0" 
+                                    min="0"
+                                    step="1"
                                     max="999"
-                                    maxlength="3" 
+                                    maxlength="3"
+                                    oninput="this.value=(parseInt(this.value)||0)"
                                     value="${cart_item.qty}" 
                                     barcode="${cart_item.barcode}"
                                     id="input-${cart_item.barcode}"
